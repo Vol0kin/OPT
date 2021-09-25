@@ -10,6 +10,7 @@
 \usepackage{enumitem}						% Permitir enumerate con distintos simbolos
 \usepackage[T1]{fontenc}					% Usar textsc en sections
 \usepackage{amsmath}						% Símbolos matemáticos
+\usepackage{amssymb}
 
 % Comando para poner el nombre de la asignatura
 \newcommand{\subject}{Optimization}
@@ -18,7 +19,7 @@
 \newcommand{\subtitulo}{Concrete mixing problem}
 \newcommand{\masters}{Master in Fundamental Principles of Data Science}
 
-\newcommand{\algebraVector}[1]{\mathbf{#1}}
+\newcommand{\algebraVector}[1]{\boldsymbol{#1}}
 
 
 % Configuracion de encabezados y pies de pagina
@@ -69,10 +70,26 @@
 
 \section{Problem description}
 
-\emph{\textbf{Find the best possible approximation $\algebraVector{x} = (x_1, \dots, x_m)$ of the ideal mixture,
-$\algebraVector{c} = (c_1, \dots, c_n)$, by using the material from the $m$ mines.}}
+\emph{\textbf{Suppose that we are mixing concrete and are using $n$ different gravel sizes
+$s_1, \dots, s_n$.}}
+
+\emph{\textbf{The ideal mixture is given by $\algebraVector{c} = (c_1, \dots, c_n)$, where
+$c_i$ $(0 \leq c_i \leq 1)$ is the fraction of size $s_i$ in the mix, and $\sum_{i=1}^n c_i = 1$.}}
+
+\emph{\textbf{Gravel mixtures come from $m$ different mines: $C_1, \dots C_m$. The gravel
+composition at each mine $C_j$ is given by $C_j = (c_1^j, \dots, c_n^j)$, where $0 \leq c_i^j \leq 1$
+for all $i = 1, \dots, n$ and $\sum_{i=1}^n c_i^j = 1$.}}
+
+\emph{\textbf{Let $\algebraVector{x} = (x_1, \dots, x_m)$ be the vector which represents the
+fraction of the gravel of the mine $C_j \in C$ in the mixture, where $0 \leq x_j \leq 1$ for all
+$j = 1, \dots, m$ and $\sum_{j=1}^m x_j = 1$.}}
+
+\emph{\textbf{Find the best possible approximation $\algebraVector{x} = (x_1, \dots, x_m)$
+of the ideal mixture, $\algebraVector{c} = (c_1, \dots, c_n)$, by using the material from
+the $m$ mines.}}
 
 \section{Solution}
+
 
 \end{document}
 
