@@ -19,6 +19,7 @@
 \newcommand{\subtitulo}{Concrete mixing problem}
 \newcommand{\masters}{Master in Fundamental Principles of Data Science}
 
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\algebraVector}[1]{\boldsymbol{#1}}
 
 
@@ -76,12 +77,12 @@ $s_1, \dots, s_n$.}}
 \emph{\textbf{The ideal mixture is given by $\algebraVector{c} = (c_1, \dots, c_n)$, where
 $c_i$ $(0 \leq c_i \leq 1)$ is the fraction of size $s_i$ in the mix, and $\sum_{i=1}^n c_i = 1$.}}
 
-\emph{\textbf{Gravel mixtures come from $m$ different mines: $C_1, \dots C_m$. The gravel
-composition at each mine $C_j$ is given by $C_j = (c_1^j, \dots, c_n^j)$, where $0 \leq c_i^j \leq 1$
-for all $i = 1, \dots, n$ and $\sum_{i=1}^n c_i^j = 1$.}}
+\emph{\textbf{Gravel mixtures come from $m$ different mines. The gravel
+composition at each mine $j = 1, \dots, m$ is given by $C_j = (c_{1j}, \dots, c_{nj})$, where
+$0 \leq c_{ij} \leq 1$ for all $i = 1, \dots, n$ and $\sum_{i=1}^n c_{ij} = 1$.}}
 
-\emph{\textbf{Let $\algebraVector{x} = (x_1, \dots, x_m)$ be the vector which represents the
-fraction of the gravel of the mine $C_j \in C$ in the mixture, where $0 \leq x_j \leq 1$ for all
+\emph{\textbf{Let $\algebraVector{x} = (x_1, \dots, x_m)$ be the vector that represents the
+fraction of gravel of the mines in the mixture, where $0 \leq x_j \leq 1$ for all
 $j = 1, \dots, m$ and $\sum_{j=1}^m x_j = 1$.}}
 
 \emph{\textbf{Find the best possible approximation $\algebraVector{x} = (x_1, \dots, x_m)$
@@ -90,6 +91,69 @@ the $m$ mines.}}
 
 \section{Solution}
 
+We have that $\algebraVector{x} \in \mathbb{R}^m$, $\algebraVector{c} \in \mathbb{R}^n$ and
+$C \in \mathbb{R}^{n \times m}$, where the matrix $C = (C_1, \dots, C_m)$ has $C_j$ as columns.
+
+Finding the best possible vector $\algebraVector{x}$ means finding a vector such that
+
+\begin{equation}
+  \label{eq:original-problem}
+  C\algebraVector{x} = \algebraVector{c}
+\end{equation}
+
+This means that the vector result of the matrix-vector product $C\algebraVector{x}$ has to be
+as similar as possible to $\algebraVector{c}$. With this in mind, we can rewrite expression
+\eqref{eq:original-problem} as the following optimization problem:
+
+\begin{subequations}
+\begin{alignat}{2}
+  \algebraVector{x}^\star &= \min_{x \in \mathbb{R}^m} \norm{C\algebraVector{x} - \algebraVector{c}}^2 \label{eq:minimization-problem} \\
+  &\text{subjet to } \sum_{j=1}^m x_j = 1 \text{, and } x_j \geq 0 \label{eq:restrictions}
+\end{alignat}
+\end{subequations}
+
+\noindent where $\algebraVector{x}^\star$ is the best possible solution out of all the
+feasible ones. Note that minimizing $\norm{C\algebraVector{x} - \algebraVector{c}}^2$
+is the same as minimizing $\norm{C\algebraVector{x} - \algebraVector{c}}$.
+
+Now, knowing that $\norm{\algebraVector{x}} = \sqrt{\algebraVector{x}^T\algebraVector{x}}$, the
+distance found in expression \eqref{eq:minimization-problem} can be rewritten as follows:
+
+\begin{equation}
+  \label{eq:quadratic-opt-problem}
+\begin{aligned}
+  \norm{C\algebraVector{x} - \algebraVector{c}}^2 &=
+  (C\algebraVector{x} - \algebraVector{c})^T (C\algebraVector{x} - \algebraVector{c})\\
+  &= \algebraVector{x}^T C^T C \algebraVector{x} - \algebraVector{x}^T C^T \algebraVector{c} - \algebraVector{c}^T C \algebraVector{x} + \algebraVector{c}^T \algebraVector{c} \\
+  & = \algebraVector{x}^T C^T C \algebraVector{x} - (\algebraVector{x}^T C^T \algebraVector{c})^T - \algebraVector{c}^T C \algebraVector{x} + \algebraVector{c}^T \algebraVector{c} \\
+  & = \algebraVector{x}^T C^T C \algebraVector{x} - \algebraVector{c}^T C \algebraVector{x} - \algebraVector{c}^T C \algebraVector{x} + \algebraVector{c}^T \algebraVector{c} \\
+  & = \algebraVector{x}^T C^T C \algebraVector{x} - 2\algebraVector{c}^T C \algebraVector{x} + \norm{\algebraVector{c}}^2
+\end{aligned}
+\end{equation}
+
+Thanks to the last expression in \eqref{eq:quadratic-opt-problem}, we can clearly see that
+this is a \textbf{Quadratic Optimization} problem because the objective function is quadratic and
+all the restrictions are linear.
+
+Notice that if $C \in \mathbb{R}^{n \times m}$, then $C^T C \in \mathbb{R}^{n \times n}$
+and $\algebraVector{c}^T C \in \mathbb{R}^m$. Let $z = C \algebraVector{x}$, then:
+
+\begin{equation}
+  \label{eq:inequalty}
+  \algebraVector{x}^T C^T C \algebraVector{x} = \algebraVector{z}^T \algebraVector{z} = \norm{\algebraVector{z}}^2 \geq 0,
+  \quad \forall \algebraVector{x} \in \mathbb{R}^m
+\end{equation}
+
+From the inequality in expression \eqref{eq:inequalty} we know that the Euclidean norm
+is only going to be 0 if $\algebraVector{x} = 0$. Taking also into account the problem restrictions
+that can be seen in \eqref{eq:restrictions}, we know that $\sum_{j=1}^m x_j = 1$, which means that
+$\algebraVector{x} \neq 0$. This implies that $C^T C$ is \textbf{positive definite} and that
+an optimal value can be found.
+
+Thus, we can conclude that a non-zero value of $\algebraVector{x}$ can be found so that
+the distance $\norm{C\algebraVector{x} - \algebraVector{c}}^2$ is as close to 0 as possible, which
+means that the found value of $\algebraVector{x}$ is going to be the optimal solution to this
+minimization problem.
 
 \end{document}
 
