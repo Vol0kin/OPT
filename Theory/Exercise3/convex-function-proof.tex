@@ -10,23 +10,14 @@
 \usepackage{enumitem}						% Permitir enumerate con distintos simbolos
 \usepackage[T1]{fontenc}					% Usar textsc en sections
 \usepackage{amsmath}						% Símbolos matemáticos
-\usepackage{tikz}
-\usetikzlibrary{calc}
+\usepackage{amssymb}
 
 % Comando para poner el nombre de la asignatura
 \newcommand{\subject}{Optimization}
 \newcommand{\autor}{Vladislav Nikolov Vasilev}
-\newcommand{\titulo}{Optimization Problem 1}
-\newcommand{\subtitulo}{Smallest Area problem}
+\newcommand{\titulo}{Optimization Problem 3}
+\newcommand{\subtitulo}{Convex Function problem}
 \newcommand{\masters}{Master in Fundamental Principles of Data Science}
-
-\tikzset{
-  dot/.style={circle,inner sep=1pt,fill,scale=1.5,label={$#1$},name=#1}
-}
-
-\newcommand{\length}[1]{\lvert#1\rvert}
-\newcommand{\polyarea}[1]{\left[#1\right]}
-
 
 % Configuracion de encabezados y pies de pagina
 \pagestyle{fancy}
@@ -78,10 +69,92 @@
 \section{Problem description}
 
 \emph{\textbf{Prove, without using the above theorem, that for any
-$a \in \textbb{R}$, $f(x) = e^{ax}$ is a convex function.}}
+$a \in \mathbb{R}$, $f(x) = e^{ax}$ is a convex function.}}
 
 \section{Solution}
 
+To prove that the function $f(x) = e^{ax}$ is a convex function for any $a \in \mathbb{R}$,
+let's first suppose that we have two points, $x$ and $y$, such that $x, y \in \mathbb{R}$ and $x \neq y$.
+For the function $f(x)$ to be convex, the following inequality has to be satisfied:
+
+\begin{equation}
+  \label{eq:convex-function-inequality}
+  f(\lambda x + (1 - \lambda)y) \leq \lambda f(x) + (1 - \lambda)f(y), \quad \forall \lambda \in [0, 1]
+\end{equation}
+
+Now, let us substitute $f$ in expression \eqref{eq:convex-function-inequality} with our function:
+
+\begin{equation}
+  \label{eq:exponential-inequality}
+  e^{a(\lambda x + (1 - \lambda)y)} \leq \lambda e^{ax} + (1 - \lambda)e^{ay}
+\end{equation}
+
+If we further operate, we obtain the following:
+
+\begin{equation}
+  \label{eq:exponential-operations}
+  \begin{aligned}[b]
+    e^{\lambda ax + ay - \lambda ay} &\leq \lambda e^{ax} + e^{ay} - \lambda e^{ay} \\
+    e^{\lambda ax} e^{ay} e^{-\lambda ay} &\leq \lambda e^{ax} + e^{ay} - \lambda e^{ay} \\
+    e^{\lambda ax} e^{-\lambda ay} &\leq \lambda \frac{e^{ax}}{e^{ay}} + 1 - \lambda \\
+    e^{\lambda ax - \lambda ay} &\leq \lambda e^{ax - ay} + 1 - \lambda \\
+    e^{\lambda a(x - y)} &\leq \lambda e^{a(x - y)} + 1 - \lambda
+  \end{aligned}
+\end{equation}
+
+To simplify a little bit the previous expression, let us introduce a new variable, $z$,
+such that $z = a(x - y)$. If we substitute accordingly in the above result, we obtain the
+following:
+
+\begin{equation}
+  \label{eq:exponential-substitution}
+  e^{\lambda z} \leq \lambda e^{z} + 1 - \lambda
+\end{equation}
+
+Knowing that $e^x$ can be defined as a power series as:
+
+$$e^x = \sum_{n=0}^\infty \frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots$$
+
+\noindent we can substitute $e^x$ in the expression \eqref{eq:exponential-substitution}. After
+doing that, we get:
+
+\begin{equation}
+  \label{eq:power-series-inequality}
+  \begin{aligned}[b]
+    1 + \lambda z + \frac{(\lambda z)^2}{2!} + \frac{(\lambda z)^3}{3!} + \dots &\leq
+    \lambda \bigg( 1 + z + \frac{(z)^2}{2!} + \frac{(z)^3}{3!} + \dots \bigg) + 1 - \lambda \\
+    \lambda + \lambda z + \frac{(\lambda z)^2}{2!} + \frac{(\lambda z)^3}{3!} + \dots &\leq
+    \lambda \bigg( 1 + z + \frac{z^2}{2!} + \frac{z^3}{3!} + \dots \bigg) \\
+    \lambda \bigg( 1 + z + \frac{\lambda z^2}{2!} + \frac{\lambda^2 z^3}{3!} + \dots \bigg) &\leq
+    \lambda \bigg( 1 + z + \frac{z^2}{2!} + \frac{z^3}{3!} + \dots \bigg) \\
+    1 + z + \frac{\lambda z^2}{2!} + \frac{\lambda^2 z^3}{3!} + \dots &\leq
+    1 + z + \frac{z^2}{2!} + \frac{z^3}{3!} + \dots
+  \end{aligned}
+\end{equation}
+
+With the result seen in expression \eqref{eq:power-series-inequality}, we can distinguish
+3 different cases:
+
+\begin{itemize}
+  \item \textbf{Case $a = 0$}: It is easy to see that by substituting $a = 0$ in the above
+  result, we get that $1 \leq 1$, which satisfies the inequality.
+  \item \textbf{Case $a > 0$}: In this case, we can select $x$ and $y$ accordingly so that
+  $z$ is positive, which will be true when $x > y$. If we then select any value of $\lambda$ such
+  that $0 \leq \lambda \leq 1$, we can clearly see that the right expression will always be
+  smaller than the left one because the addends on the left get scaled down by $\lambda$.
+  Therefore, the inequality will be true.
+  \item \textbf{Case $a < 0$}: Here we can also select the points $x$ and $y$ accordingly
+  so that the value of $z$ is positive. Since $a$ is negative, the subtraction has to be negative,
+  which will be true when $x < y$\footnote{Note that if we are using the same points as in the previous
+  case, we are just swapping their values. Because of this, we cannot use the same value of
+  $\lambda$ as before. Therefore, we have to use $\lambda'$, which is given by the expression
+  $\lambda' = 1 - \lambda$.}. 
+  Since $z$ is positive again, we get the same result as in the previous case. Thus, the inequality
+  is satisfied again.
+\end{itemize}
+
+As we can see, the inequality defined in expression \eqref{eq:power-series-inequality} is satisfied
+for any $a \in \mathbb{R}$. Thus, we can conclude that the function $f(x) = e^{ax}$ is convex for
+any value of $a$.
 
 \end{document}
-
