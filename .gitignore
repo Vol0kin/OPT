@@ -407,3 +407,4 @@ dmypy.json
 
 # Ignore deliverables
 EX*.pdf
+Ex*.pdf
