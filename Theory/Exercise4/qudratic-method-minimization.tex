@@ -71,7 +71,9 @@
 Let $f$ be a real function on $\mathbb{R}^n$. Also let $x_0 \in \mathbb{R}^n$,
 $z \in \mathbb{R}^n$, and $\theta \in \mathbb{R}$. Define
 
-$$F(\theta) = f(x_0 + \theta z)$$
+\[
+  F(\theta) = f(x_0 + \theta z)
+\]
 
 \noindent and suppose that we are looking for the minimum of $F$ (that is, for the
 minimum of $f$ in the direction $z$ through the point $x_0$). Let $x_0 + \theta_1z$, 
@@ -79,14 +81,189 @@ $x_0 + \theta_2z$ and $x_0 + \theta_3z$ be three points where $f$ is evaluated.
 Show that the minimum predicted by applying the quadratic approximation method is
 $x_0 + \theta^* z$, where
 
-$$ \theta^* = \frac{[\theta_2^2 - \theta_3^2]F(\theta_1) + [\theta_3^2 - \theta_1^2]F(\theta_2) + [\theta_1^2 - \theta_2^2]F(\theta_3)}{2[(\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)]}$$
+\[
+  \theta^* = \frac{[\theta_2^2 - \theta_3^2]F(\theta_1) + [\theta_3^2 - \theta_1^2]F(\theta_2) + [\theta_1^2 - \theta_2^2]F(\theta_3)}{2[(\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)]}
+\]
 
 \noindent and it is indeed the minimum of the parabola passing through the above three
 points if
 
-$$\frac{(\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)}{(\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)} < 0$$
+\[
+  \frac{
+    (\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  } < 0
+\]
 
 \section{Solution}
 
+The quadratic method allows us to interpolate a given function by using a second-degree polynomial.
+In this case, we are going to approximate $F$ by
 
+\[
+  \phi(\theta) = a + b\theta + c\theta^2
+\]
+
+To determine the values of the coefficients of $\phi$ we can use three points, $\theta_1$, $\theta_2$ and
+$\theta_3$. These points will be evaluated using the function $F$. After that, we can easily solve a system
+of linear equations to find the coefficients.
+
+Notice that, since $\phi$ approximates $F$, a local minimum of the function $F$ is also going to be a local
+minimum of $\phi$. To find a first approximation of a local minimum, we can solve for $\phi(\theta) = 0$,
+which gives us:
+
+\begin{equation}
+  \label{eq:derivative-equation}
+  \theta^* = -\frac{b}{2c}
+\end{equation}
+
+However, for the equation seen in \eqref{eq:derivative-equation} to yield a minimum, it is necessary
+that $c > 0$, which means that the parabola described by $\phi$ is convex.
+
+First, let's find out the values of the coefficients. The system of linear equations that we
+must solve is the following:
+
+\begin{equation}
+  \label{eq:system-linear-equations}
+  \begin{pmatrix}
+    \phi(\theta_1) \\
+    \phi(\theta_2) \\
+    \phi(\theta_3)
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & \theta_1 & \theta_1^2 \\
+    1 & \theta_2 & \theta_2^2 \\
+    1 & \theta_3 & \theta_3^2
+  \end{pmatrix}
+  \begin{pmatrix}
+    a \\
+    b \\
+    c
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    F(\theta_1) \\
+    F(\theta_2) \\
+    F(\theta_3)
+  \end{pmatrix}
+\end{equation}
+
+\noindent where the matrix
+
+\[
+  V =
+  \begin{pmatrix}
+    1 & \theta_1 & \theta_1^2 \\
+    1 & \theta_2 & \theta_2^2 \\
+    1 & \theta_3 & \theta_3^2
+  \end{pmatrix}
+\]
+
+\noindent is a Vandermonde matrix, whose determinant can be computed as
+
+\[
+  |V| = \prod_{1 \leq i < j \leq n} (a_j - a_i)
+\]
+
+\noindent which in this case is $|V| = (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)$.
+
+With this information in hand, we can attempt to solve the system seen in \eqref{eq:system-linear-equations}.
+Since in equation \eqref{eq:derivative-equation} only appear $b$ and $c$, we can compute them
+using using Cramer's rule.
+
+Let's start with $c$:
+
+\begin{equation}
+  \label{eq:c-value}
+  \begin{aligned}[b]
+    c &=
+    \frac{
+      \begin{vmatrix}
+        1 & \theta_1 & F(\theta_1) \\
+        1 & \theta_2 & F(\theta_2) \\
+        1 & \theta_3 & F(\theta_3)
+      \end{vmatrix}
+    }
+    {|V|} = \\
+  &=
+  \frac{
+    \theta_2F(\theta_3) - \theta_3F(\theta_2) - \theta_1F(\theta_3) + \theta_3F(\theta_1) + \theta_1F(\theta_2) - \theta_2F(\theta_1)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  } = \\
+  &=
+  \frac{
+    (\theta_3 - \theta_2)F(\theta_1) + (\theta_1 - \theta_3)F(\theta_2) + (\theta_2 - \theta_1)F(\theta_3)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  } > 0
+  \end{aligned}
+\end{equation}
+
+Following the result of \eqref{eq:c-value}, it's easy to note that if $c > 0$, then $-c < 0$, which leads
+us to:
+
+\[
+  c = \frac{
+    (\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  } < 0
+\]
+
+Hence, we can see that the parabola is, indeed, convex. Thus, it contains a minimum.
+
+Next, if we compute the value of $b$, we get the following:
+
+\begin{equation*}
+  \begin{aligned}[b]
+    b &=
+    \frac{
+      \begin{vmatrix}
+        1 & F(\theta_1) & \theta_1^2 \\
+        1 & F(\theta_2) & \theta_2^2 \\
+        1 & F(\theta_3) & \theta_3^2
+      \end{vmatrix}
+    }
+    {|V|} = \\
+  &=
+  \frac{
+    \theta_3^2F(\theta_2) - \theta_2^2F(\theta_3) - \theta_3^2F(\theta_1) + \theta_1^2F(\theta_3) + \theta_2^2F(\theta_1) - \theta_1^2F(\theta_2)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  } = \\
+  &=
+  \frac{
+    (\theta_2^2 - \theta_3^2)F(\theta_1) + (\theta_3^2 - \theta_1^2)F(\theta_2) + (\theta_1^2 - \theta_2^2)F(\theta_3)
+  }{
+    (\theta_2 - \theta_3)(\theta_3 - \theta_1)(\theta_1 - \theta_2)
+  }
+  \end{aligned}
+\end{equation*}
+
+Now, if we try to solve equation \eqref{eq:derivative-equation} using the values of $b$ and $c$ that
+we have just found out in order to get the minimum $\theta^*$, we obtain the following result:
+
+\begin{equation*}
+  \begin{aligned}[b]
+    \theta^*
+    &=
+    -\frac{
+      [\theta_2^2 - \theta_3^2]F(\theta_1) + [\theta_3^2 - \theta_1^2]F(\theta_2) + [\theta_1^2 - \theta_2^2]F(\theta_3)
+    }{
+      2[(\theta_3 - \theta_2)F(\theta_1) + (\theta_1 - \theta_3)F(\theta_2) + (\theta_2 - \theta_1)F(\theta_3)]
+    } \\
+    &= \frac{
+      [\theta_2^2 - \theta_3^2]F(\theta_1) + [\theta_3^2 - \theta_1^2]F(\theta_2) + [\theta_1^2 - \theta_2^2]F(\theta_3)
+    }{
+      2[(\theta_2 - \theta_3)F(\theta_1) + (\theta_3 - \theta_1)F(\theta_2) + (\theta_1 - \theta_2)F(\theta_3)]
+    }  
+  \end{aligned}
+\end{equation*}
+
+Thus, we can conclude that the function $\phi$ that approximates $F$ is convex, and hence, it has a minimum, which
+is $\theta^*$. Because $\phi$ interpolates the function $F$, $\theta^*$ is also going to be a minimum
+of $F$, which guarantees us that if we minimize $\phi$, we are also going to minimize $F$.
 \end{document}
