@@ -88,5 +88,18 @@ by $\mathbf{v}_0, A\mathbf{v}_0, \dots , A_{k-1}\mathbf{v}_0$.
 
 \section{Solution}
 
+Let $\mathbf{z}_1, \mathbf{z}_2, \dots, \mathbf{z}_k \in \mathbb{R}^n$ with $k \leq n$ be
+$k$ mutually conjugate directions with respect to a given matrix $A$, which is symmetric and
+positive definite. Then, $\mathbf{x}_k$, which is a point defined from this directions, will
+minimize the function $f$ over the affine set
+$\mathbf{x}_0 + < \mathbf{z}_1, \mathbf{z}_2, \dots, \mathbf{z}_k >$. Basically, what we
+want to prove is that
+$< \mathbf{z}_1, \mathbf{z}_2, \dots, \mathbf{z}_k > = < \mathbf{v}_0, A\mathbf{v}_0, \dots , A_{k-1}\mathbf{v}_0 >$.
+
+\begin{itemize}
+  \item If $k = 1$, we have that $\mathbf{z}_1 = -\mathbf{v}_0 = -\nabla f(\mathbf{x})$.
+\end{itemize}
+
+
 
 \end{document}
