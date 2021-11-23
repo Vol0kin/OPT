@@ -1,0 +1,815 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    \usepackage{fancyhdr}						% Modificar encabezados y pies de pagina
+
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage[textwidth=390pt]{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    % Comando para poner el nombre de la asignatura
+\newcommand{\subject}{Optimization}
+\newcommand{\autor}{Vladislav Nikolov Vasilev}
+\newcommand{\titulo}{Optimization Problem 6}
+\newcommand{\subtitulo}{Conjugate gradient method problem II}
+\newcommand{\masters}{Master in Fundamental Principles of Data Science}
+
+% Configuracion de encabezados y pies de pagina
+\pagestyle{fancy}
+\lhead{\autor{}}
+\rhead{\subject{}}
+\lfoot{\masters}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}		% Linea cabeza de pagina
+\renewcommand{\footrulewidth}{0.4pt}		% Linea pie de pagina
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \pagenumbering{gobble}
+
+% Title page
+\begin{titlepage}
+  \begin{minipage}{\textwidth}
+    \centering
+    \includegraphics[scale=0.25]{img/ub-logo}\\[2cm]
+    
+    \textsc{\Large \subject\\[0.5cm]}
+    \textsc{\uppercase\expandafter{\masters}}\\[1.5cm]
+    
+    \noindent\rule[-1ex]{\textwidth}{1pt}\\[1.5ex]
+    \textsc{{\Huge \titulo\\[0.5ex]}}
+    \textsc{{\Large \subtitulo\\}}
+    \noindent\rule[-1ex]{\textwidth}{2pt}\\[3.5ex]
+  \end{minipage}
+  
+  \vspace{2cm}
+  
+  \begin{minipage}{\textwidth}
+    \centering
+    
+    \includegraphics[scale=0.4]{img/ub-ds-logo}
+    \vspace{2cm}
+    
+    \textbf{Author}\\ {\autor{}}\\[2.5ex]
+    \textsc{Faculty of Mathematics and Computer Science}\\
+    \vspace{1em}
+    \textsc{Academic year 2021-2022}
+  \end{minipage}
+\end{titlepage}
+
+\pagenumbering{arabic}
+\setlength{\parskip}{1em}
+
+    
+    
+
+    
+    \hypertarget{problem-description}{%
+\section{Problem description}}
+
+\textbf{Use a genetic algorithm to solve the example of page 84 with
+population size \(M = 50\):}
+
+\[ \max f(x,y) = 21.5 + x \sin(4\pi x) + y\sin(20\pi y) \]
+
+\textbf{with}
+
+\[(x, y) \in [-3.0, 12.11] \times [4.5, 5.8]\]
+
+\hypertarget{solution}{%
+\section{Solution}}
+
+To solve this problem we have implemented a genetic algorithm that uses
+real-valued representation instead of the binary representation because
+it feels more natural to the given problem. This simplifies a lot the
+operations that have to be carried out and is more understandable and
+natural. However, there are some considerations that have to be taken
+into account.
+
+To begin with, whenever a new chromosome is generated or mutated, we
+have to make sure that the chromosome is still a feasible solution to
+the problem. Therefore, we have implemented a method that makes sure
+that the genes of the chromosomes are still in the feasible region by
+clipping their values. This operation is applied after every crossover
+or mutation.
+
+Secondly, we cannot use the same crossover as in the binary case because
+we cannot interchange as easily as before parts of two chromosomes.
+Instead, we are going to use the \textbf{BLX-\(\alpha\)} crossover.
+Given two chromosomes, \(C_1 = (c_1^1, \dots, c_n^1)\) and
+\(C_2 = (c_1^2, \dots, c_n^2)\), it generates two offsprings
+\(O_1 = (o_1^1, \dots, o_n^1)\) and \(O_2 = (o_1^2, \dots, o_n^2)\)
+where each \(o_i^k\) is randomly (uniformly) chosen from the interval
+\([c_{min} - I\alpha, c_{max} + I\alpha]\), where
+\(c_{max} = \max(c_i^1, c_i^2)\), \(c_{min} = \min(c_i^1, c_i^2)\) and
+\(I = c_{max} - c_{min}\). In other words, for each pair of genes of the
+parents we generate a new random uniform value in the interval between
+them and also in the extrema near them. This way, we can explore the
+surroundings of the current solutions by choosing values outside the
+extrema of the interval and we can exploit the better solutions by
+choosing values in the interval.
+
+Finally, we cannot apply the same mutation as in the binary case. For
+real numbers, we can generate a random value from a normal distribution
+with mean \(\mu\) and standard deviation \(\sigma\) and add it to the
+selected gene.
+
+Let's describe now how the algorithm works. We generate a population of
+size \(M = 50\) and we evaluate them. To make things easier, we sort the
+population based on the corresponding fitness values from best to worst.
+Then we perform the optimization process. In each iteration, we select
+the chromosomes that will make it into the next generation. To do this,
+we select random pairs of chromosomes from the population, and for each
+one of them we perform a \textbf{binary tournament}, selecting the
+chromosome with the best fitness value. We repeat this process until we
+have a new population with \(M\) chromosomes (they can be repeated).
+
+Having selected the members of the new population, we perform the
+crossover. To do so, we generate \(M\) random values from a \([0, 1)\)
+uniform distribution. Then we check the value of each random value. If
+it's smaller than the cross rate, then the corresponding chromosome is
+selected for mating. If we get an even number of chromosomes, we just
+remove the last one. We generate random couples and we apply the
+\textbf{BLX-\(\alpha\)} crossover.
+
+After that, we try to mutate the new population. To do this, we generate
+a random value for each gene of each chromosome of the population. If
+it's smaller than the mutation rate then the previously defined mutation
+is applied to the gene. After we do that, we evaluate the new population
+and sort it according to its fitness values.
+
+Finally, we compare the previous population with the new one and we
+apply an \textbf{elitism mnechanism}, which will allow us to keep the
+best solution found so far in the population. To implement, we compare
+the fitness values of the best chromosome from the previous generation
+with the best from the current. If the chromosome from the previous one
+is better, then we substitute the worst from the current and we sort
+again the population. Then, we repeat the process.
+
+Let's see now an implementation of this algorithm:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{class} \PY{n+nc}{GeneticAlgorithm}\PY{p}{:}
+    \PY{k}{def} \PY{n+nf+fm}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{x\PYZus{}range}\PY{p}{,} \PY{n}{y\PYZus{}range}\PY{p}{,} \PY{n}{max\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10000}\PY{p}{,} \PY{n}{cross\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{mutation\PYZus{}rate}\PY{o}{=}\PY{l+m+mf}{0.001}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pop\PYZus{}size} \PY{o}{=} \PY{n}{pop\PYZus{}size}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}range} \PY{o}{=} \PY{n}{x\PYZus{}range}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}range} \PY{o}{=} \PY{n}{y\PYZus{}range}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{max\PYZus{}iter} \PY{o}{=} \PY{n}{max\PYZus{}iter}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{cross\PYZus{}rate} \PY{o}{=} \PY{n}{cross\PYZus{}rate}
+        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{mutation\PYZus{}rate} \PY{o}{=} \PY{n}{mutation\PYZus{}rate}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}initialize\PYZus{}population}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method to initialize a population of chromosomes}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{population} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{size}\PY{o}{=}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+        
+        \PY{n}{x\PYZus{}interval} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{y\PYZus{}interval} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{} Map [0, 1] values to corresponding ranges}
+        \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{x\PYZus{}interval} \PY{o}{+} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{*} \PY{n}{y\PYZus{}interval} \PY{o}{+} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}range}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+        \PY{k}{return} \PY{n}{population}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}evaluate\PYZus{}population}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method to evaluate the population of chromosomes using the fitness function.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{x\PYZus{}values} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}
+        \PY{n}{y\PYZus{}values} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}
+        
+        \PY{k}{return} \PY{l+m+mf}{21.5} \PY{o}{+} \PY{n}{x\PYZus{}values} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{l+m+mi}{4} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x\PYZus{}values}\PY{p}{)} \PY{o}{+} \PY{n}{y\PYZus{}values} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{l+m+mi}{20} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{y\PYZus{}values}\PY{p}{)}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}sort\PYZus{}population\PYZus{}fitness}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{,} \PY{n}{fitness}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method used to sort the population according to their fitness values.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{sort\PYZus{}idx} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{n}{fitness}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+        
+        \PY{k}{return} \PY{n}{population}\PY{p}{[}\PY{n}{sort\PYZus{}idx}\PY{p}{]}\PY{p}{,} \PY{n}{fitness}\PY{p}{[}\PY{n}{sort\PYZus{}idx}\PY{p}{]}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}selection\PYZus{}schema}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{,} \PY{n}{fitness}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method that implements the selection schema. It\PYZsq{}s based on the}
+\PY{l+s+sd}{        binary tournament, in which we select pairs of chromosomes that}
+\PY{l+s+sd}{        compete to see who has the best fitness value. The tournament is}
+\PY{l+s+sd}{        applied until we have a new population of the same size as the}
+\PY{l+s+sd}{        previous one.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{c+c1}{\PYZsh{} The selection schema is based on the binary torunament}
+        \PY{n}{new\PYZus{}population} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        
+        \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pop\PYZus{}size}\PY{p}{)}\PY{p}{:}
+            \PY{n}{idx\PYZus{}1}\PY{p}{,} \PY{n}{idx\PYZus{}2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{choice}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+            \PY{n}{new\PYZus{}population}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{population}\PY{p}{[}\PY{n}{idx\PYZus{}1}\PY{p}{]} \PY{k}{if} \PY{n}{fitness}\PY{p}{[}\PY{n}{idx\PYZus{}1}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{n}{fitness}\PY{p}{[}\PY{n}{idx\PYZus{}2}\PY{p}{]} \PY{k}{else} \PY{n}{population}\PY{p}{[}\PY{n}{idx\PYZus{}2}\PY{p}{]}\PY{p}{)}
+        
+        \PY{n}{new\PYZus{}population} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{new\PYZus{}population}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}blx\PYZus{}alpha\PYZus{}crossover}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{parents}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method that implements the BLX\PYZhy{}\PYZbs{}alpha crossover operator. This}
+\PY{l+s+sd}{        is one of the crossover operators used for genetic algorithms}
+\PY{l+s+sd}{        that use the real\PYZhy{}valued repesentation.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{c+c1}{\PYZsh{} Compute min and max values column\PYZhy{}wise}
+        \PY{n}{c\PYZus{}min} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{n}{parents}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n}{c\PYZus{}max} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{parents}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Compute interval}
+        \PY{n}{i} \PY{o}{=} \PY{n}{c\PYZus{}max} \PY{o}{\PYZhy{}} \PY{n}{c\PYZus{}min}
+        
+        \PY{c+c1}{\PYZsh{} Generate children}
+        \PY{n}{child\PYZus{}1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{c\PYZus{}min} \PY{o}{\PYZhy{}} \PY{n}{i} \PY{o}{*} \PY{n}{alpha}\PY{p}{,} \PY{n}{c\PYZus{}max} \PY{o}{+} \PY{n}{i} \PY{o}{*} \PY{n}{alpha}\PY{p}{)}
+        \PY{n}{child\PYZus{}2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{c\PYZus{}min} \PY{o}{\PYZhy{}} \PY{n}{i} \PY{o}{*} \PY{n}{alpha}\PY{p}{,} \PY{n}{c\PYZus{}max} \PY{o}{+} \PY{n}{i} \PY{o}{*} \PY{n}{alpha}\PY{p}{)}
+        
+        \PY{n}{children} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{child\PYZus{}1}\PY{p}{,} \PY{n}{child\PYZus{}2}\PY{p}{)}\PY{p}{)}
+        \PY{n}{children} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}clip\PYZus{}values}\PY{p}{(}\PY{n}{children}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{children}
+        
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}cross\PYZus{}schema}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method that implements the cross schema. For every chromosome}
+\PY{l+s+sd}{        in the population, a random number is generated and if it\PYZsq{}s below}
+\PY{l+s+sd}{        the threshold, the chromosome is selected for breeding. Then, random}
+\PY{l+s+sd}{        couples are formed and children are formed. These children replace}
+\PY{l+s+sd}{        their parents.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{prob\PYZus{}cross} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{size}\PY{o}{=}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pop\PYZus{}size}\PY{p}{)}
+        \PY{n}{cross\PYZus{}idx} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{prob\PYZus{}cross} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{cross\PYZus{}rate}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{} If length is even, remove last element}
+        \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cross\PYZus{}idx}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{l+m+mi}{2} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{n}{cross\PYZus{}idx} \PY{o}{=} \PY{n}{cross\PYZus{}idx}\PY{p}{[}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+        
+        \PY{n}{cross\PYZus{}idx} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{permutation}\PY{p}{(}\PY{n}{cross\PYZus{}idx}\PY{p}{)}
+        \PY{n}{cross\PYZus{}idx} \PY{o}{=} \PY{n}{cross\PYZus{}idx}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}
+        
+        \PY{k}{for} \PY{n}{couple\PYZus{}idx} \PY{o+ow}{in} \PY{n}{cross\PYZus{}idx}\PY{p}{:}
+            \PY{n}{parents} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{n}{couple\PYZus{}idx}\PY{p}{]}
+            \PY{n}{children} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}blx\PYZus{}alpha\PYZus{}crossover}\PY{p}{(}\PY{n}{parents}\PY{p}{)}
+            
+            \PY{n}{population}\PY{p}{[}\PY{n}{couple\PYZus{}idx}\PY{p}{]} \PY{o}{=} \PY{n}{children}
+            
+        \PY{k}{return} \PY{n}{population}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}mutation}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{,} \PY{n}{mean}\PY{o}{=}\PY{l+m+mf}{0.}\PY{p}{,} \PY{n}{sigma}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method that implements the mutation operator. It modifies a gene by}
+\PY{l+s+sd}{        adding a random value generated from a normal distribution with mean = 0}
+\PY{l+s+sd}{        and std=0.7.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{mutation\PYZus{}prob} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{size}\PY{o}{=}\PY{n}{population}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+        \PY{n}{mutation\PYZus{}idx} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{mutation\PYZus{}prob} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{mutation\PYZus{}rate}\PY{p}{)}
+        
+        \PY{n}{population}\PY{p}{[}\PY{n}{mutation\PYZus{}idx}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{normal}\PY{p}{(}\PY{n}{mean}\PY{p}{,} \PY{n}{sigma}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{n}{mutation\PYZus{}idx}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+        \PY{n}{population} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}clip\PYZus{}values}\PY{p}{(}\PY{n}{population}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{population}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}clip\PYZus{}values}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{population}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method used to make sure that the solutions to the problem are still}
+\PY{l+s+sd}{        feasible.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{clip}\PY{p}{(}\PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{o}{*}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{x\PYZus{}range}\PY{p}{)}
+        \PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{clip}\PY{p}{(}\PY{n}{population}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{o}{*}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{y\PYZus{}range}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{population}
+    
+    
+    \PY{k}{def} \PY{n+nf}{\PYZus{}elitism}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{old\PYZus{}population}\PY{p}{,} \PY{n}{old\PYZus{}fitness}\PY{p}{,} \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method used to keep the best solution until now. The worst one is}
+\PY{l+s+sd}{        discarded if the previous best solution has a better fitness}
+\PY{l+s+sd}{        value than the best solution of the current population.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{k}{if} \PY{n}{old\PYZus{}fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{n}{new\PYZus{}fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{new\PYZus{}population}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{old\PYZus{}population}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+            \PY{n}{new\PYZus{}fitness}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{old\PYZus{}fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+            
+            \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}sort\PYZus{}population\PYZus{}fitness}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}
+    
+        
+    \PY{k}{def} \PY{n+nf}{train\PYZus{}predict}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+        \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{        Method that trains a population of chromosomes a given number of iterations}
+\PY{l+s+sd}{        and returns the best solution.}
+\PY{l+s+sd}{        \PYZsq{}\PYZsq{}\PYZsq{}}
+        \PY{n}{population} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}initialize\PYZus{}population}\PY{p}{(}\PY{p}{)}
+        \PY{n}{fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}evaluate\PYZus{}population}\PY{p}{(}\PY{n}{population}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Sort population and fitness by fitness value}
+        \PY{n}{population}\PY{p}{,} \PY{n}{fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}sort\PYZus{}population\PYZus{}fitness}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{fitness}\PY{p}{)}
+        
+        \PY{n}{best\PYZus{}solutions} \PY{o}{=} \PY{p}{[}\PY{n}{fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}
+        
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{max\PYZus{}iter}\PY{p}{)}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} 1. Selection}
+            \PY{n}{new\PYZus{}population} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}selection\PYZus{}schema}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{fitness}\PY{p}{)}
+            \PY{n}{new\PYZus{}fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}evaluate\PYZus{}population}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{)}
+            \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}sort\PYZus{}population\PYZus{}fitness}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} 2. Cross}
+            \PY{n}{new\PYZus{}population} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}cross\PYZus{}schema}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} 3. Mutate}
+            \PY{n}{new\PYZus{}population} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}mutation}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} 4. Evaluation and sorting}
+            \PY{n}{new\PYZus{}fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}evaluate\PYZus{}population}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{)}
+            \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}sort\PYZus{}population\PYZus{}fitness}\PY{p}{(}\PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}\PY{p}{)}
+            \PY{n}{population}\PY{p}{,} \PY{n}{fitness} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}elitism}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{fitness}\PY{p}{,} \PY{n}{new\PYZus{}population}\PY{p}{,} \PY{n}{new\PYZus{}fitness}\PY{p}{)}
+            
+            \PY{n}{best\PYZus{}solutions}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            
+            \PY{k}{if} \PY{n}{verbose} \PY{o+ow}{and} \PY{n}{i} \PY{o}{\PYZpc{}} \PY{l+m+mi}{1000} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Iteration }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{max\PYZus{}iter}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Best solution: }\PY{l+s+si}{\PYZob{}}\PY{n}{population}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Fitness: }\PY{l+s+si}{\PYZob{}}\PY{n}{fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n}{verbose}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Iteration }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{max\PYZus{}iter}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Best solution: }\PY{l+s+si}{\PYZob{}}\PY{n}{population}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Fitness: }\PY{l+s+si}{\PYZob{}}\PY{n}{fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            
+            \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{max\PYZus{}iter} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{best\PYZus{}solutions}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Number of iterations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Fitness value of the best value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            
+            \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        
+        \PY{k}{return} \PY{n}{population}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{fitness}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    For this case, we have set cross\_rate \$ = 0.7\$, mutation\_rate
+\(= 0.001\) and the stopping criterion as 10000 iterations. For the
+\textbf{BLX-\(\alpha\)} crossover we have used a value of
+\(\alpha = 0.2\). For the mutation operator, we have set that
+\(\mu = 0\) and \(\sigma = 0.7\). With this in mind, let us now declare
+an instance of the class and run the algorithm.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pop\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{50}
+\PY{n}{x\PYZus{}range} \PY{o}{=} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{3.}\PY{p}{,} \PY{l+m+mf}{12.11}\PY{p}{)}
+\PY{n}{y\PYZus{}range} \PY{o}{=} \PY{p}{(}\PY{l+m+mf}{4.5}\PY{p}{,} \PY{l+m+mf}{5.8}\PY{p}{)}
+
+\PY{n}{ga} \PY{o}{=} \PY{n}{GeneticAlgorithm}\PY{p}{(}\PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{x\PYZus{}range}\PY{p}{,} \PY{n}{y\PYZus{}range}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{xy}\PY{p}{,} \PY{n}{fitness} \PY{o}{=} \PY{n}{ga}\PY{o}{.}\PY{n}{train\PYZus{}predict}\PY{p}{(}\PY{n}{verbose}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Found solution: }\PY{l+s+si}{\PYZob{}}\PY{n}{xy}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s1}{Fitness value: }\PY{l+s+si}{\PYZob{}}\PY{n}{fitness}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration 0/10000       Best solution: [10.1663998   5.32876163]        Fitness:
+35.5019752690798
+Iteration 1000/10000    Best solution: [12.11        5.52504595]        Fitness:
+38.920521529367356
+Iteration 2000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 3000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 4000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 5000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 6000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 7000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 8000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 9000/10000    Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+Iteration 10000/10000   Best solution: [12.11        5.72504424]        Fitness:
+39.12052072869683
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{img/genetic_algorithm_5_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Found solution: [12.11        5.72504424]       Fitness value: 39.12052072869683
+    \end{Verbatim}
+
+    As we can observe, we have reached a maximum at the ponts
+\(x^* = 12.11\), \(y^* = 5.72504424\), where the value of the function
+is \(f(x^*, y^*) = 39.12052072869683\).
+
+If we observe the graph, we can see how the the fitness value of the
+best chromosome of the population changes as the algorithm progresses.
+We see that it starts at around \(35.5\) and it reaches the best value
+in less than 2000 iterations. After that, it doesn't improve. Thus, we
+could have defined some strategy to stop before.
+
+Something that we should keep in mind is that the algorithm is indeed
+stochastic, which means that the best fitness values and how they evolve
+depend on the initial values (which are randomly generated). However,
+this technique is very powerful, because it can be used to optimize any
+kind of function without having any information of the function itself
+and its shapes. Also, it can be used to optimize non-continuos
+functions, which is a hughe advantage if we compare it to other methods.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
