@@ -82,5 +82,25 @@ is equal to
 
 \section{Solution}
 
+By definition, a $n$-dimensional simplex $S$ is a convex polyhedron with $n + 1$ vertices.
+Moreover, we have that the faces of a simplex are a lower dimensional simplex and that $0 \leq p \leq n$.
+Therefore, a face of dimension $p$ of a $n$-dimensional is a simplex made up by $p + 1$ vertices
+of the $n + 1$ vertices from the original simplex.
+
+The number of faces of dimension $p$ is given by the amount of \textbf{combinations} of $p + 1$ vertices
+that we can make by selecting them among the $n + 1$ available vertices. We can express the
+previous statement using combinatorics, which results in the following expression:
+
+\[
+  C^{n+1}_{p+1} =
+ \begin{pmatrix}
+    n + 1 \\
+    p + 1
+  \end{pmatrix}
+  =
+  \frac{(n+1)!}{(p+1)!\big((n+1) - (p+1)\big)!}
+  =
+  \frac{(n+1)!}{(p+1)!(n-p)!}
+\]
 
 \end{document}
